@@ -1,0 +1,9 @@
+[submodule "DiceMaster_ESPScreen"]
+	path = DiceMaster_ESPScreen
+	url = git@github.com:ShapiroDesignLab/DiceMaster_ESPScreen.git
+[submodule "DiceMaster_Central"]
+	path = DiceMaster_Central
+	url = git@github.com:ShapiroDesignLab/DiceMaster_Central.git
+[submodule "DiceMaster_Studio"]
+	path = DiceMaster_Studio
+	url = git@github.com:DanielHou315/DiceMaster_Studio.git
