@@ -24,18 +24,22 @@ Command Messages: 6 bytes
 - 0x07 - GIF Transfer Start
 - 0x08 - GIF Frame
 - 0x09 - GIF Transfer End
-- 0x0A - Backlight Control
-- 0x0B - Acknowledgment (ACK)
-- 0x0C - Error Message (NACK)
+- 0x0A - Backlight On
+- 0x0B - Backlight Off
+- 0x0C - Ping Request
+- 0x0D - Ping Response
+- 0x0E - Acknowledgment (ACK)
+- 0x0F - Error Message (NACK)
 
 The payload of the message is different for different types of messages, described as follows. 
 
 ### Text Section
 **Text Group**
-A text group 
+A text group with rotation support:
 - BYTE 0-1: BG Color
 - BYTE 2-3: Font Color
 - BYTE 4: number of lines
+- BYTE 5: rotation (0=0°, 1=90°, 2=180°, 3=270°)
 - Individual chunks 
 
 **Text**
@@ -54,6 +58,7 @@ A text group
 - BYTE 2: Delay Time (0-255 ms)
 - BYTE 3-5: total image size
 - BYTE 6: num chunks
+- BYTE 7: rotation (0=0°, 1=90°, 2=180°, 3=270°)
 
 **IMAGE CHUNK**
 - BYTE 0: image ID
@@ -71,6 +76,7 @@ A text group
 - BYTE 2: Delay Time (0-255 ms)
 - BYTE 3-5: total image size
 - BYTE 6: num chunks
+- BYTE 7: rotation (0=0°, 1=90°, 2=180°, 3=270°)
 
 **IMAGE_CHUNK**
 - BYTE 0: image ID
@@ -87,6 +93,17 @@ A text group
 	- 4-5 bytes: upper option y
 	- 6 byte: upper option text length
 	- 7 byte onward: actual text
+
+### Ping Command
+
+**Ping Request**
+- No payload (0 bytes)
+- Used to check board status and connectivity
+
+**Ping Response**
+- BYTE 0: status code (0=OK, 1=Warning, 2=Error)
+- BYTE 1: text length
+- BYTE 2 onwards: status string (e.g., "OK", "Low Memory", "Display Error")
 
 ### Options
 
