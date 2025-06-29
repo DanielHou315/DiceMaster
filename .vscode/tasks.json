@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build DiceMaster Central",
+			"type": "shell",
+			"command": "cd /home/dice/DiceMaster/DiceMaster_Central && python3 setup.py develop",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"isBackground": false
+		}
+	]
+}
