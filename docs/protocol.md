@@ -50,10 +50,10 @@ A text group with rotation support:
 **Image Begin**
 - BYTE 0: image ID
 - BYTE 1: 4-bit Format, 4-bit Resolution
-- BYTE 2: Delay Time (0-255 ms)
-- BYTE 3-5: total image size
-- BYTE 6: num chunks
-- BYTE 7: rotation (0=0°, 1=90°, 2=180°, 3=270°)
+- BYTE 2-3: Delay Time (0-65535 ms)
+- BYTE 4-6: total image size
+- BYTE 7: num chunks
+- BYTE 78 rotation (0=0°, 1=90°, 2=180°, 3=270°)
 
 **IMAGE CHUNK**
 - BYTE 0: image ID
@@ -72,9 +72,12 @@ A text group with rotation support:
 - Used to check board status and connectivity
 
 **Ping Response**
-- BYTE 0: status code (0=OK, 1=Warning, 2=Error)
-- BYTE 1: text length
-- BYTE 2 onwards: status string (e.g., "OK", "Low Memory", "Display Error")
+- BYTE 0: SOF marker for response (0x7F)
+- BYTE 1-5: status code (0=OK, 1=Warning, 2=Error)
+- BYTE 6-7: padding (0)
+
+
+## Error Code
 
 ## File Structure
 
