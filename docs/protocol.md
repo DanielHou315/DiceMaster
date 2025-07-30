@@ -7,7 +7,7 @@ The Raspberry Pi and the Screen Modules communicate with each other in SPI throu
 This section of bytes is attached to each packet, storing the necessary statistics and message types for parsing of the rest of the message. 
 
 MOSI: 2048 Bytes (2kb buffer, 480x480 jpegs are mostly 10~15kb)
-Command Messages: 6 bytes
+Command Messages: 5 bytes
 - BYTE 0: Start of Frame (SOF): 0x7E
 - BYTE 1: Message Type
 - BYTE 2: Message ID
@@ -32,7 +32,6 @@ The payload of the message is different for different types of messages, describ
 **Text Group**
 A text group with rotation support:
 - BYTE 0-1: BG Color
-- BYTE 2-3: Font Color
 - BYTE 4: number of lines
 - BYTE 5: rotation (0=0°, 1=90°, 2=180°, 3=270°)
 - Individual chunks 
@@ -42,7 +41,8 @@ A text group with rotation support:
 - BYTE 0-1: x cursor
 - BYTE 2-3: y cursor
 - BYTE 4: font id
-- BYTE 5: text length
+- BYTE 5-6: Font Color
+- BYTE 7: text length
 - PAYLOAD STRING
 **NOTE** each text block can be NO LONGER THAN 255 BYTES due to size byte limit. 
 
