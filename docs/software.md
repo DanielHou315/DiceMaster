@@ -51,6 +51,11 @@ source prepare.sh
 colcon build --symlink-install
 ```
 
+8. Install custom py-spidev (https://forums.raspberrypi.com/viewtopic.php?t=124472)
+```
+pip install -e . --break-system-packages
+```
+
 9. Configure auto-start of package entrypoint.
 
 ## For User Computer App

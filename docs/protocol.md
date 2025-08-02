@@ -52,18 +52,23 @@ A text group with rotation support:
 - BYTE 1: 4-bit Format, 4-bit Resolution
 - BYTE 2-3: Delay Time (0-65535 ms)
 - BYTE 4-6: total image size
-- BYTE 7: num chunks
-- BYTE 78 rotation (0=0°, 1=90°, 2=180°, 3=270°)
+- BYTE 7: num chunks (includes this embedded chunk 0)
+- BYTE 8: rotation (0=0°, 1=90°, 2=180°, 3=270°)
+- BYTE 9 onward: Image chunk 0 data (embedded in ImageStart message)
 
 **IMAGE CHUNK**
 - BYTE 0: image ID
-- BYTE 1: chunk ID
+- BYTE 1: chunk ID (starts from 1, since chunk 0 is embedded in ImageStart)
 - BYTE 2-4: starting location
-- BYTE 5-6: length of chunk (max 65535 Bytes)
+- BYTE 5-6: length of chunk (max 8KB - header size)
 - PAYLOAD
 
-**IMAGE END**
-- BYTE 0: Image ID
+**Image Transfer Timeout**
+Images are automatically invalidated if not all chunks are received within the timeout period:
+- Timeout = 100ms × number of chunks
+- Each image tracks which chunks have been received
+- Missing chunks after timeout will mark the image as expired
+- No explicit ImageEnd message is needed
 
 ### Ping Command
 
@@ -71,13 +76,66 @@ A text group with rotation support:
 - No payload (0 bytes)
 - Used to check board status and connectivity
 
-**Ping Response**
+**Screen Response** (Not used yet)
 - BYTE 0: SOF marker for response (0x7F)
-- BYTE 1-5: status code (0=OK, 1=Warning, 2=Error)
+- BYTE 1: message ID
+- BYTE 2-5: status code (0=OK, 1=Warning, 2=Error)
 - BYTE 6-7: padding (0)
 
-
 ## Error Code
+
+**General Errors**
+- 0x00 - SUCCESS
+- 0x01 - UNKNOWN_MSG_TYPE
+- 0x02 - INVALID_FORMAT
+- 0x04 - IMAGE_ID_MISMATCH
+- 0x05 - PAYLOAD_LENGTH_MISMATCH
+- 0x06 - UNSUPPORTED_IMAGE_FORMAT
+- 0x07 - OUT_OF_MEMORY
+- 0x08 - INTERNAL_ERROR
+- 0x09 - INVALID_OPTION_INDEX
+- 0x0A - UNSUPPORTED_MESSAGE
+
+**Header Decoding Errors**
+- 0x10 - HEADER_TOO_SHORT
+- 0x11 - INVALID_SOF_MARKER
+- 0x12 - INVALID_MESSAGE_TYPE
+- 0x13 - INVALID_LENGTH_FIELD
+- 0x14 - HEADER_LENGTH_MISMATCH
+
+**TextBatch Specific Errors**
+- 0x20 - TEXT_PAYLOAD_TOO_SHORT
+- 0x21 - TEXT_TOO_MANY_ITEMS
+- 0x22 - TEXT_INVALID_ROTATION
+- 0x23 - TEXT_ITEM_HEADER_TOO_SHORT
+- 0x24 - TEXT_ITEM_LENGTH_MISMATCH
+- 0x25 - TEXT_PAYLOAD_TRUNCATED
+- 0x26 - TEXT_LENGTH_CALCULATION_ERROR
+
+**ImageStart Specific Errors**
+- 0x30 - IMAGE_START_TOO_SHORT
+- 0x31 - IMAGE_START_INVALID_ROTATION
+- 0x32 - IMAGE_START_INVALID_FORMAT
+- 0x33 - IMAGE_START_INVALID_RESOLUTION
+
+**ImageChunk Specific Errors**
+- 0x40 - IMAGE_CHUNK_TOO_SHORT
+- 0x41 - IMAGE_CHUNK_DATA_TRUNCATED
+- 0x42 - IMAGE_CHUNK_INVALID_LENGTH
+
+**ImageEnd Specific Errors**
+- 0x50 - IMAGE_END_TOO_SHORT
+
+**Ping Specific Errors**
+- 0x80 - PING_REQUEST_NOT_EMPTY
+- 0x81 - PING_RESPONSE_TOO_SHORT
+- 0x82 - PING_RESPONSE_TEXT_TRUNCATED
+
+**Ack/Error Specific Errors**
+- 0x90 - ACK_TOO_SHORT
+- 0x91 - ERROR_TOO_SHORT
+- 0x92 - ERROR_TEXT_TRUNCATED
+
 
 ## File Structure
 
