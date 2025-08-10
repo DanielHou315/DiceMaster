@@ -10,9 +10,19 @@ MOSI: 2048 Bytes (2kb buffer, 480x480 jpegs are mostly 10~15kb)
 Command Messages: 5 bytes
 - BYTE 0: Start of Frame (SOF): 0x7E
 - BYTE 1: Message Type
-- BYTE 2: Message ID
+- BYTE 2: Screen ID (bit-masked for CAN-bus like behavior)
 - BYTE 3-4: Payload length (BIG_ENDIAN)
 - The payload starts at BYTE 5 onwards. 
+
+**Screen ID and CAN-bus Behavior**
+
+The Screen ID field (BYTE 2) implements a CAN-bus like addressing mechanism where multiple screens can share the same SPI CS pin. Each screen has a unique SCREEN_ID value (0-7), and messages are filtered based on bit masking:
+
+- The k-th bit of the Screen ID byte corresponds to screen k
+- A screen will only process messages where its corresponding bit is set
+- Example: If SCREEN_ID = 2, the screen will only process messages where bit 2 is set (Screen ID byte & 0x04 != 0)
+- Multiple screens can be targeted by setting multiple bits (e.g., Screen ID = 0x05 targets screens 0 and 2)
+- If the screen ID doesn't match, the message is ignored with error code SCREEN_ID_MISMATCH (0x15) 
 
 **Message Types**
 - 0x01 - Text Batch
@@ -102,6 +112,7 @@ Images are automatically invalidated if not all chunks are received within the t
 - 0x12 - INVALID_MESSAGE_TYPE
 - 0x13 - INVALID_LENGTH_FIELD
 - 0x14 - HEADER_LENGTH_MISMATCH
+- 0x15 - SCREEN_ID_MISMATCH
 
 **TextBatch Specific Errors**
 - 0x20 - TEXT_PAYLOAD_TOO_SHORT
