@@ -20,26 +20,59 @@ Raspberry Pi 3B+ board:
 - Between holes: 49 x 58 mm
 - Hole dimension: 2.5mm
 
-PiSugar S Battery
+PiSugar 3S Battery
 - Holes same as above, height 19mm
-
-Old Battery 
-- Dimensions 20 x 67 x 38 mm
 
 Raspberry Pi Compute Module 4 
 - Board dimensions: 40 x 55mm
-- Between holes 32.5 x 47.5 mm
+- Between holes 33 x 48 mm
 - Hole dimension: 2.5 mm
 
 
 ## Pinout Design
 
 - [Raspberry Pi pinout](https://pinout.xyz/)
-- [ESP-32 S3 pinout]()
+- [ESP-32 S3 guide](https://learn.adafruit.com/adafruit-qualia-esp32-s3-for-rgb666-displays)
 - [Connecting screen to Raspberry Pi](https://pinout.xyz/pinout/spi)
 - [Connecting MPU6050](https://www.instructables.com/How-to-Use-the-MPU6050-With-the-Raspberry-Pi-4/)
 
-
 ## Electrical Design
 
-TBD. We will be making a PCB for this board. 
+### Data Lines
+**Screens**
+We use 3 SPI buses to connect a total of six screens. To minimize CS switching time, we design an application layer protocol that is similar to CAN, where devices choose to accept/respond to messages based on the device ID. 
+
+SPI 0: 
+- SCK: 23
+- MISO: 21 (not used)
+- MOSI: 19
+- CS: 24 (for both screens)
+
+SPI 1: 
+- SCK: 40
+- MISO: 35 (not used)
+- MOSI: 38
+- CS: 12 (for both screens)
+
+SPI 3: 
+- SCK: 5
+- MISO: 28 (not used)
+- MOSI: 3
+- CS: 27 (for both screens)
+
+**IMU/Battery**
+IMU and Battery uses I2C6. 
+- SDA: 15
+- SCL: 16
+
+**Power Switch**
+
+**Status LED**
+
+**Buttons**
+
+### Power Lines
+
+### PCB
+
+Yuzhen is working on this
