@@ -7,6 +7,3 @@
 [submodule "DiceMaster_ROS_workspace"]
 	path = DiceMaster_ROS_workspace
 	url = git@github.com:DanielHou315/DiceMaster_ROS_workspace.git
-[submodule "DiceMaster_Webstudio"]
-	path = DiceMaster_Webstudio
-	url = git@github.com:DanielHou315/DiceMaster_Webstudio.git
