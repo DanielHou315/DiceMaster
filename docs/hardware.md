@@ -76,3 +76,25 @@ IMU and Battery uses I2C6.
 ### PCB
 
 Yuzhen is working on this
+
+
+## HW v2
+
+### Reliability
+
+### Cost Reduction
+
+**Whiteboard version**: 
+
+
+[Example dice](https://www.amazon.com/Scribbledo-Multipurpose-Colorful-Educational-Classroom/dp/B0B3S75YCV). 
+
+### Batter Life Improvement
+
+For HW v1, the batter lasts about 45 minutes when all displays are active, as was tested during serious play.
+
+
+### Additional features
+
+1. Cooling: adding a fan for Raspberry Pi, air channels, and optimized layout of 5V to 3.3V regulators. 
+2. 
