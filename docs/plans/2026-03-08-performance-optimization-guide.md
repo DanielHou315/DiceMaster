@@ -22,6 +22,15 @@ Topic rates: `/imu/data_raw` 50Hz, `/imu/data` 45-50Hz, `/imu/motion` 50Hz, `/tf
 
 **Impact: chassis.py 71-83% → estimated <5%**
 
+**Status: Python reference implementation complete.** Validated against URDF ground truth (200 random quaternions, 4800 edge comparisons). Benchmarked at **57x speedup** over chain-walk approach (17μs vs 978μs per tick, pure math only — real-world speedup with TF overhead eliminated is ~100x+). See:
+- `DiceMaster_Central/dicemaster_central/dicemaster_central/hw/orientation_math.py` — vectorized computation
+- `DiceMaster_Central/dicemaster_central/scripts/urdf_to_dice_config.py` — URDF → YAML config extractor
+- `DiceMaster_Central/dicemaster_central/resource/dice_geometry.yaml` — generated config
+- `DiceMaster_Central/dicemaster_central/tests/test_orientation_math.py` — validation tests (8 tests)
+- `DiceMaster_Central/dicemaster_central/tests/bench_orientation.py` — benchmark
+
+Next step: C++ ROS2 node wrapping this math for production deployment.
+
 ### Problem
 
 `chassis.py` performs 30 `tf_buffer.lookup_transform()` calls per orientation tick (10Hz = 300 lookups/sec), each with a 10ms blocking timeout. All URDF joints are `type="fixed"` — every screen frame and edge frame has a constant transform relative to `base_link`. The entire TF tree traversal is wasted work.
