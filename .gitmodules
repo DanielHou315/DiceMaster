@@ -4,9 +4,6 @@
 [submodule "DiceMaster_Central"]
 	path = DiceMaster_Central
 	url = git@github.com:ShapiroDesignLab/DiceMaster_Central.git
-[submodule "DiceMaster_ROS_workspace"]
-	path = DiceMaster_ROS_workspace
-	url = git@github.com:DanielHou315/DiceMaster_ROS_workspace.git
 [submodule "DiceMaster_HW"]
 	path = DiceMaster_HW
 	url = git@github.com:DanielHou315/DiceMaster_HW.git
