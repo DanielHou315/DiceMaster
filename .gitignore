@@ -206,3 +206,6 @@ CLAUDE.md
 
 # Rosbag data
 *.db3
+# Local tooling / generated output
+.playwright-mcp/
+converted_games/
