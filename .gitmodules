@@ -10,3 +10,6 @@
 [submodule "DiceMaster_Central_Web"]
 	path = DiceMaster_Central_Web
 	url = git@github.com:DanielHou315/DiceMaster_Central_Web.git
+[submodule "DiceMaster_Studio"]
+	path = DiceMaster_Studio
+	url = git@github.com:DanielHou315/DiceMaster_Studio.git
