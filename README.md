@@ -13,6 +13,8 @@
 
 ---
 
+![DiceMaster](assets/dice_vertical_mid.jpg)
+
 </div>
 
 ## 🌟 About
@@ -64,29 +66,32 @@ DiceMaster was showcased at the **SeriousPlay 2025** conference, demonstrating i
 ## 🔧 How It Works
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Raspberry Pi Central                     │
-│                                                              │
-│  ┌──────────┐    ┌───────────┐    ┌──────────────┐        │
-│  │   Game   │───▶│  Chassis  │◀───│  IMU Sensor  │        │
-│  │ Strategy │    │  Manager  │    │  (Motion)    │        │
-│  └────┬─────┘    └─────┬─────┘    └──────────────┘        │
-│       │                │                                     │
-│       │ Screen Commands│                                     │
-│       ▼                ▼                                     │
-│  ┌──────────────────────────────────────┐                  │
-│  │   Screen Bus Managers (SPI)          │                  │
-│  └──────────────┬───────────────────────┘                  │
-└─────────────────┼──────────────────────────────────────────┘
-                  │
-       ┌──────────┼──────────┐
-       ▼          ▼          ▼
-  ┌────────┐ ┌────────┐ ┌────────┐
-  │ ESP32  │ │ ESP32  │ │ ESP32  │
-  │ Screen │ │ Screen │ │ Screen │
-  │  1 & 2 │ │  3 & 4 │ │  5 & 6 │
-  └────────┘ └────────┘ └────────┘
+┌────────────────────────────────────────────────────┐
+│                  Raspberry Pi                      │
+│                 DiceMaster_Central                 │
+│                                                    │
+│  ┌─────────────┐   ┌───────────────────────────┐  │
+│  │ Game (dice  │──▶│ Chassis Node              │  │
+│  │ Python SDK) │   │ (orientation + motion)    │  │
+│  └─────────────┘   └────────────┬──────────────┘  │
+│                                 │ IMU data         │
+│  ┌──────────────────────────┐   │ ◀──────────────  │
+│  │ Screen Bus (SPI master)  │◀──┘   MPU-6050 IMU  │
+│  └──────────┬───────────────┘                     │
+└─────────────┼──────────────────────────────────────┘
+              │ SPI (chunked protocol)
+    ┌─────────┼──────────┐
+    ▼         ▼          ▼
+┌────────┐┌────────┐┌────────┐
+│ESP32 #1││ESP32 #2││ESP32 #3│  ... × 6 total
+│480×480 ││480×480 ││480×480 │  (DiceMaster_ESPScreen)
+│ screen ││ screen ││ screen │
+└────────┘└────────┘└────────┘
 ```
+
+The full wire protocol between Central and ESPScreen is documented in [docs/protocol.md](docs/protocol.md).
+
+![Software Architecture](assets/software_architecture.png)
 
 ### The Magic Behind DiceMaster:
 
@@ -151,6 +156,16 @@ class MyGame(BaseStrategy):
 | [**Hardware Guide**](docs/hardware.md) | Assembly and hardware configuration | Hardware Engineers |
 | [**Software Setup**](docs/software.md) | Installation and deployment instructions | DevOps/Administrators |
 
+### 🗂️ **Submodules**
+
+| Submodule | Description | Language |
+|---|---|---|
+| [DiceMaster_Central](DiceMaster_Central/) | Raspberry Pi ROS2 runtime: game engine, IMU, SPI bus manager | Python/C++ |
+| [DiceMaster_ESPScreen](DiceMaster_ESPScreen/) | Per-screen ESP32 Arduino firmware: receives SPI frames and drives the display | C++ (Arduino) |
+| [DiceMaster_HW](DiceMaster_HW/) | PCB schematics and KiCad hardware design files | KiCad |
+| [DiceMaster_Central_Web](DiceMaster_Central_Web/) | Web-based game simulation and preview platform | TypeScript |
+| [DiceMaster_Studio](DiceMaster_Studio/) | Game authoring studio (AI-assisted) | TypeScript |
+
 ### 🗂️ **Repository Structure**
 
 ```
@@ -211,6 +226,8 @@ Want to be notified? Star this repo and watch for updates! ⭐
 ### Chinese Quizlet
 
 A language learning game that displays vocabulary questions with image hints. Shake to cycle through questions!
+
+![Chinese Quizlet Game](assets/chinese_quizlet_game.png)
 
 - **Top Screen**: Question text ("What is this in Chinese?")
 - **Bottom Screen**: Answer (e.g., "猫" - cat)
